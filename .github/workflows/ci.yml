@@ -39,6 +39,9 @@ jobs:
       - name: Run tests (17 suites)
         run: python -m unittest discover -s tests -v
 
+      - name: Check alignment with the evaluated research baseline
+        run: python tools/check_research_alignment.py
+
       - name: Generate SBOM (CycloneDX)
         # v0 — SHA-pinned, Syft-backed
         uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610

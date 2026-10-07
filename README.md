@@ -17,13 +17,14 @@ arXiv:2603.22489).
 
 Two enforcement points, both fail-closed, both audit-logged:
 
-1. **`TOOL_REGISTERED` gate** — every tool's name, description, and *every
-   nested schema description* is scanned against a deterministic signal
-   catalog before the tool is admitted. Severity ≥ M3 ⇒ deny; the tool never
-   reaches the model's context.
+1. **`TOOL_REGISTERED` gate** — the tool's name, description, and nested
+   input-schema `description`/`title` strings are scanned against a deterministic
+   signal catalog. The verdict is maximum matched severity. At the default
+   threshold, severity ≥ M3 ⇒ deny. The integrating host must honor that verdict
+   before exposing metadata to the model or dispatching a call.
 2. **Call-time decision-path check** — admitted metadata is fingerprinted
    (SHA-256 over canonical JSON). At invocation, the current metadata is
-   re-fingerprinted and diffed. Any mutation (**rug pull**) ⇒ deny +
+   re-fingerprinted and diffed. A covered-field mutation (**rug pull**) ⇒ deny +
    quarantine until a clean re-scan on the next `tools/list` refresh.
    Unknown tool ⇒ **default-deny**.
 
@@ -59,7 +60,7 @@ verdict = reg.register(tool_dict)          # TOOL_REGISTERED gate
 if verdict.allowed:
     decision = reg.check_invocation(tool_dict)   # call-time diff
     if decision.allowed:
-        ...  # safe to place in model context / execute
+        ...  # metadata gate passed; host authorization and execution controls still apply
 
 reg.rescan_on_refresh(new_tools_list)      # on tools/list change
 
@@ -78,8 +79,10 @@ pytest
 - **Deterministic classifier, no LLM in the loop.** A model inside the trust
   boundary you are defending is a recursion, not a defense. Regex/heuristic
   signals are auditable, testable, and explainable per-deny.
-- **Fail closed everywhere.** Malformed metadata, unnamed tools, unregistered
-  tools, mutated tools — all deny paths, never warn-and-continue.
+- **Fail-closed registry decisions for its defined checks.** Missing/invalid
+  names, unknown tools, quarantine and covered metadata mutation deny. Complete
+  input-schema validation is not implemented; a null schema can pass. M1/M2
+  matches may allow at the default M3 threshold. See the research probes below.
 - **Framework-agnostic.** Takes plain dicts, returns verdicts. No MCP client
   dependency; wire it into any client at the two enforcement points.
 
@@ -96,6 +99,34 @@ pytest
   the deployment.
 - Fingerprinting covers `name`, `description`, and `inputSchema`. Server
   behavior changes that don't touch metadata are out of scope here.
+- Top-level `title`, `annotations`, `outputSchema`, tool responses and provider
+  identity are outside this fingerprint projection. There is no semantic
+  name-similarity or provider-authentication detector. A clean refresh can recover
+  quarantine; direct registration does not clear it.
+
+## Research paper and reproducible evidence
+
+The research companion is
+[rajesamp/sentinel-tpd-research](https://github.com/rajesamp/sentinel-tpd-research).
+[Research alignment and evidence links](docs/research.md) explains the separation
+between this implementation and the paper's assay, fixtures and recorded results.
+
+The paper evaluates exact revision
+[`5ce5d56e57a0acd092435fca5d89b78d0b39ee7b`](https://github.com/rajesamp/sentinel-tpd/tree/5ce5d56e57a0acd092435fca5d89b78d0b39ee7b).
+The live repository matched all 12 pinned files on 2026-10-07 before this
+documentation-only update. Runtime modules, package version and upstream tests
+remain unchanged. The
+[paper evidence index](https://github.com/rajesamp/sentinel-tpd-research/blob/codex/sentinel-tpd-paper/research/paper-evidence-index.md)
+maps every figure, table, equation and all 34 bibliography entries to GitHub
+evidence and attributed primary sources.
+
+The study records local inert enqueues: source attack-label prevention 17/27 and
+benign enqueues 20/20; authored challenge prevention 4/26 and benign enqueues
+37/44. All three source shadowing templates are missed. These are bounded
+metadata outcomes, not real-agent attack success or safe remote execution.
+Weighted semantic risk, behavior monitoring and process isolation remain
+unimplemented proposals or external host responsibilities. See the manuscript's
+projection, labeling and validity limits before interpreting the counts.
 
 ## Relation to the SENTINEL family
 

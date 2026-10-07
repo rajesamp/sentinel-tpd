@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "evaluated_revision": "5ce5d56e57a0acd092435fca5d89b78d0b39ee7b",
+  "research_repository": "https://github.com/rajesamp/sentinel-tpd-research",
+  "research_release": "https://github.com/rajesamp/sentinel-tpd-research/releases/tag/v0.1.1",
+  "checked_local_date": "2026-10-07",
+  "scope": "Current runtime modules, package metadata, license and original tests match the evaluated revision; documentation is intentionally updated. This is compatibility/provenance, not a new experiment.",
+  "files": [
+    {
+      "path": "LICENSE",
+      "sha256": "512a029cba1221e67f71da8373900a62410ac17cd428780a5cc1c6b33683d4b0"
+    },
+    {
+      "path": "pyproject.toml",
+      "sha256": "96ae8d89598c62fc33a6e9de7dbc31d013bfa550f9274fcb3a3997ee99a4ec17"
+    },
+    {
+      "path": "sentinel_tpd/__init__.py",
+      "sha256": "ce3aff772fd85dea3e1967056d1f209d024626bf0d4d9c17ca52372efe742e36"
+    },
+    {
+      "path": "sentinel_tpd/scanner.py",
+      "sha256": "031cc165bc28a6337299399e33fc9d9a3b8b8be9834e1acf366d9764dae29a58"
+    },
+    {
+      "path": "sentinel_tpd/signals.py",
+      "sha256": "aa075d495f257a32d4adb3b3d02c50ef6a624266c3aa78a7c826d93236c71a49"
+    },
+    {
+      "path": "sentinel_tpd/registry.py",
+      "sha256": "235097205a0c5802f587a0add8d8ad3f3fee276fddd19be45906c092241c3e93"
+    },
+    {
+      "path": "sentinel_tpd/audit.py",
+      "sha256": "bb0faec8aa25af5b8e7b331ad29653567c2a0e0d7f4845770c307cb84514e54f"
+    },
+    {
+      "path": "tests/test_sentinel_tpd.py",
+      "sha256": "d145e66d0476b1ebe194be7e42c2144197f99264a848a3844b34daa1a5f8b50b"
+    },
+    {
+      "path": "tests/fixtures/poisoned_tools.py",
+      "sha256": "e8f9635dfdf5d16e0a785660d68118ae10006f0c6237cfd4ada810fe1ea9d75d"
+    },
+    {
+      "path": "tests/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "tests/fixtures/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "excluded_documentation": [
+    "README.md",
+    "docs/research.md"
+  ],
+  "on_drift": "A changed or new runtime file requires an explicit paper-alignment review and, for changed behavior, new frozen experiments; do not overwrite the old study."
+}
